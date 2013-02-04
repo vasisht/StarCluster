@@ -1,4 +1,5 @@
 from starcluster import clustersetup
+from starcluster.exception import RemoteCommandFailed
 from starcluster.templates import sge
 from starcluster.logger import log
 
@@ -110,12 +111,27 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
 
     def _remove_from_sge(self, node):
         master = self._master
-        master.ssh.execute('qconf -dattr hostgroup hostlist %s @allhosts' %
-                           node.alias)
-        master.ssh.execute('qconf -purge queue slots all.q@%s' % node.alias)
-        master.ssh.execute('qconf -dconf %s' % node.alias)
-        master.ssh.execute('qconf -de %s' % node.alias)
-        node.ssh.execute('pkill -9 sge_execd')
+        try:
+            master.ssh.execute('qconf -dattr hostgroup hostlist %s @allhosts' % node.alias)
+        except RemoteCommandFailed:
+            log.warn("qconf -dattr hostgroup hostlist %s @allhosts FAILED" %node.alias )
+        try:
+            master.ssh.execute('qconf -purge queue slots all.q@%s' % node.alias)
+        except RemoteCommandFailed:
+            log.warn("qconf -purge queue slots all.q@%s FAILED" % node.alias)
+        try:
+            master.ssh.execute('qconf -dconf %s' % node.alias)
+        except RemoteCommandFailed:
+            log.warn('qconf -dconf %s FAILED' % node.alias)
+        try:
+            master.ssh.execute('qconf -de %s' % node.alias)
+        except RemoteCommandFailed:
+            log.warn('qconf -de %s FAILED' % node.alias)
+        try:
+            node.ssh.execute('pkill -9 sge_execd')
+        except RemoteCommandFailed:
+            log.warn('pkill -9 sge_execd FAILED')
+
         nodes = filter(lambda n: n.alias != node.alias, self._nodes)
         self._create_sge_pe(nodes=nodes)
 
