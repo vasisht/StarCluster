@@ -123,6 +123,14 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
             master.ssh.execute('qconf -dconf %s' % node.alias)
         except RemoteCommandFailed:
             log.warn('qconf -dconf %s FAILED' % node.alias)
+        #added by mylons
+        try:
+            master.ssh.execute('qconf -dh %s' % node.alias )
+        except RemoteCommandFailed:
+            log.warn('qconf -dh %s FAILED' % node.alias )
+        #end added by mlyons
+
+
         try:
             master.ssh.execute('qconf -de %s' % node.alias)
         except RemoteCommandFailed:
