@@ -46,6 +46,7 @@ class SGEStats(object):
         doc = xml.dom.minidom.parseString(qhost_out)
         for h in doc.getElementsByTagName("host"):
             name = h.getAttribute("name")
+            #skips master node -- master isn't in exec hosts
             if name == "master":
                 continue
             hash = {"name": name}
