@@ -46,6 +46,8 @@ class SGEStats(object):
         doc = xml.dom.minidom.parseString(qhost_out)
         for h in doc.getElementsByTagName("host"):
             name = h.getAttribute("name")
+            if name == "master":
+                continue
             hash = {"name": name}
             for stat in h.getElementsByTagName("hostvalue"):
                 for hvalue in stat.childNodes:
