@@ -18,15 +18,23 @@ class PackageInstaller(clustersetup.DefaultClusterSetup):
         if packages:
             self.packages = [pkg.strip() for pkg in packages.split(',')]
 
+    def _update_update(self, node):
+        node.apt_command('update')
     def run(self, nodes, master, user, user_shell, volumes):
         if not self.packages:
             log.info("No packages specified!")
             return
+
         if self.update:
             log.info('Updating packages on all nodes:')
+<<<<<<< HEAD
             for node in nodes
                 log.info("node.alias=%s" % node.alias)
                 self.pool.simple_job(node.apt_command('update'), (), jobid=node.alias)
+=======
+            for node in nodes:
+                self.pool.simple_job(node.apt_command, (['update']), jobid=node.alias)
+>>>>>>> bug in simple_job call
             self.pool.wait(len(nodes))
 
         log.info('Installing the following packages on all nodes:')
