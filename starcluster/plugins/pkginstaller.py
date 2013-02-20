@@ -25,7 +25,7 @@ class PackageInstaller(clustersetup.DefaultClusterSetup):
         if self.update:
             log.info('Updating packages on all nodes:')
             for node in nodes:
-                self.pool.simple_job(node.apt_command('update'), (list()), jobid=node.alias)
+                self.pool.simple_job(node.apt_command('update'), (), jobid=node.alias)
             self.pool.wait(len(nodes))
 
         log.info('Installing the following packages on all nodes:')
