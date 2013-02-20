@@ -11,20 +11,28 @@ class PackageInstaller(clustersetup.DefaultClusterSetup):
     setup_class = starcluster.plugins.pkginstaller.PackageInstaller
     packages = mongodb, python-mongodb
     """
-    def __init__(self, packages=None):
+    def __init__(self, packages=None, update=False):
         super(PackageInstaller, self).__init__()
         self.packages = packages
+        self.update = update
         if packages:
             self.packages = [pkg.strip() for pkg in packages.split(',')]
+
+    def _apt_update(self, node):
+        if self.update:
+            log.info("Updating packages on %s" % node.alias )
+            node.ssh.execute('apt-get -y update')
 
     def run(self, nodes, master, user, user_shell, volumes):
         if not self.packages:
             log.info("No packages specified!")
             return
+        self._apt_update(master)
         log.info('Installing the following packages on all nodes:')
         log.info(', '.join(self.packages), extra=dict(__raw__=True))
         pkgs = ' '.join(self.packages)
         for node in nodes:
+            self._apt_update(node)
             self.pool.simple_job(node.apt_install, (pkgs), jobid=node.alias)
         self.pool.wait(len(nodes))
 
