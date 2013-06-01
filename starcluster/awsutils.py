@@ -335,10 +335,10 @@ class EasyEC2(EasyAWS):
 
     def request_instances(self, image_id, price=None, instance_type='m1.small',
                           min_count=1, max_count=1, count=1, key_name=None,
-                          security_groups=None, launch_group=None,
+                          security_groups=None, security_group_ids=None,
+                          launch_group=None,
                           availability_zone_group=None, placement=None,
                           user_data=None, placement_group=None,
-                          security_group_ids=None,
                           block_device_map=None, subnet_id=None):
         """
         Convenience method for running spot or flat-rate instances
@@ -364,24 +364,28 @@ class EasyEC2(EasyAWS):
                               (device, img.id))
                     bdmap.pop(device)
             block_device_map = bdmap
+
+        shared_kwargs = dict(instance_type=instance_type,
+                             key_name=key_name,
+                             subnet_id=subnet_id,
+                             placement=placement,
+                             placement_group=placement_group,
+                             user_data=user_data,
+                             block_device_map=block_device_map)
+
         if price:
             return self.request_spot_instances(
-                price, image_id, instance_type=instance_type,
-                count=count, launch_group=launch_group, key_name=key_name,
+                price, image_id,
+                count=count, launch_group=launch_group,
                 security_group_ids=security_group_ids,
-                subnet_id=subnet_id,
                 availability_zone_group=availability_zone_group,
-                placement=placement, placement_group=placement_group,
-                user_data=user_data, block_device_map=block_device_map)
+                **shared_kwargs)
         else:
             return self.run_instances(
-                image_id, instance_type=instance_type,
+                image_id,
                 min_count=min_count, max_count=max_count,
-                key_name=key_name, security_groups=security_groups,
-                placement=placement, user_data=user_data,
-                placement_group=placement_group,
-                block_device_map=block_device_map,
-                subnet_id=subnet_id)
+                security_groups=security_groups,
+                **shared_kwargs)
 
     def request_spot_instances(self, price, image_id, instance_type='m1.small',
                                count=1, launch_group=None, key_name=None,
@@ -389,14 +393,9 @@ class EasyEC2(EasyAWS):
                                security_group_ids=None, subnet_id=None, placement=None,
                                placement_group=None, user_data=None,
                                block_device_map=None):
-        return self.conn.request_spot_instances(
-            price, image_id, instance_type=instance_type, count=count,
-            launch_group=launch_group, key_name=key_name,
-            security_group_ids=security_group_ids,
-            subnet_id=subnet_id,
-            availability_zone_group=availability_zone_group,
-            placement=placement, placement_group=placement_group,
-            user_data=user_data, block_device_map=block_device_map)
+        kwargs = locals()
+        kwargs.pop('self')
+        return self.conn.request_spot_instances(**kwargs)
 
     def run_instances(self, image_id, instance_type='m1.small', min_count=1,
                       max_count=1, key_name=None, security_groups=None,
