@@ -92,6 +92,11 @@ NODE_IMAGE_ID = %(x86_ami)s
 # instance type for all cluster nodes
 # (options: %(instance_types)s)
 NODE_INSTANCE_TYPE = m1.small
+
+#Optional vpc id if cluster should run in a vpc
+#VPC_ID=vpc-6b1fe402
+#Optional the subnet to use for the vpc
+#SUBNET_ID=subnet-6a1fe403
 # Uncomment to disable installing/configuring a queueing system on the
 # cluster (SGE)
 #DISABLE_QUEUE=True
@@ -272,9 +277,16 @@ NODE_INSTANCE_TYPE = m1.small
 # latency message passing via ZeroMQ.
 # [plugin ipcluster]
 # SETUP_CLASS = starcluster.plugins.ipcluster.IPCluster
+# # Enable the IPython notebook server (optional)
 # ENABLE_NOTEBOOK = True
-# #set a password for the notebook for increased security
+# # Set a password for the notebook for increased security
+# # This is optional but *highly* recommended
 # NOTEBOOK_PASSWD = a-secret-password
+# # Set a custom directory for storing/loading notebooks (optional)
+# NOTEBOOK_DIRECTORY = /path/to/notebook/dir
+# # Set a custom packer. Must be one of 'json', 'pickle', or 'msgpack'
+# # This is optional.
+# PACKER = pickle
 #
 # Use this plugin to create a cluster SSH "dashboard" using tmux. The plugin
 # creates a tmux session on the master node that automatically connects to all
