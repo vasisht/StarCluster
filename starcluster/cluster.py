@@ -1432,8 +1432,9 @@ class Cluster(object):
             s.stop()
         if pg:
             log.info("Removing %s placement group" % pg.name)
-            pg.delete()
+            self.ec2.delete_group(pg)
         if sg:
+            log.info("Removing %s security group" % sg.name)
             self.ec2.delete_group(sg)
 
     def start(self, create=True, create_only=False, validate=True,
