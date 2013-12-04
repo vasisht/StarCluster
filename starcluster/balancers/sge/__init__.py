@@ -335,8 +335,11 @@ class SGEStats(object):
         bits.append(self.avg_wait_time())
         #last field is array of loads for hosts
         arr = self.get_loads()
-        load_sum = float(reduce(self._add, arr))
-        avg_load = load_sum / len(arr)
+	if arr:
+        	load_sum = float(reduce(self._add, arr))
+        	avg_load = load_sum / len(arr)
+	else:
+		avg_load = 0.0
         bits.append(avg_load)
         return bits
 
