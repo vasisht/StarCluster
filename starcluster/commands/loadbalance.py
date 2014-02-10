@@ -87,7 +87,4 @@ class CmdLoadBalance(ClusterCompleter):
         cluster_tag = args[0]
         cluster = self.cm.get_cluster(cluster_tag)
         lb = sge.SGELoadBalancer(**self.specified_options_dict)
-	try:
-        	lb.run(cluster)
-	except Exception:
-		pass
+        lb.run(cluster)

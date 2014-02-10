@@ -237,8 +237,9 @@ class SGEStats(object):
                 single = self.queues.get(q).get('slots')
                 break
         if (total != (single * len(self.hosts))):
-            raise exception.BaseException(
-                "ERROR: Number of slots not consistent across cluster")
+            #raise exception.BaseException(
+            #    "ERROR: Number of slots not consistent across cluster")
+	    log.info("Number of slots not consistent across cluster")
         return single
 
     def oldest_queued_job_age(self):
