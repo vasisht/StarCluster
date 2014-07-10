@@ -649,7 +649,8 @@ class Node(object):
         self.ssh.execute('/etc/init.d/portmap start')
         self.ssh.execute('mount -t rpc_pipefs sunrpc /var/lib/nfs/rpc_pipefs/',
                          ignore_exit_status=True)
-        self.ssh.execute('/etc/init.d/nfs start')
+        #self.ssh.execute('/etc/init.d/nfs start')
+        self.ssh.execute('service nfs restart')
         self.ssh.execute('/usr/sbin/exportfs -fra')
 
     def mount_nfs_shares(self, server_node, remote_paths):
@@ -680,7 +681,7 @@ class Node(object):
         self.ssh.remove_lines_from_file('/etc/fstab', remote_paths_regex)
         fstab = self.ssh.remote_file('/etc/fstab', 'a')
         for path in remote_paths:
-            fstab.write('%s:%s %s nfs vers=3,user,rw,exec,noauto 0 0\n' %
+            fstab.write('%s:%s %s nfs vers=3,rw,exec,noauto 0 0\n' %
                         (server_node.alias, path, path))
         fstab.close()
         for path in remote_paths:
