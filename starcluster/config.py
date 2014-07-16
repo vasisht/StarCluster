@@ -27,7 +27,6 @@ from starcluster import awsutils
 from starcluster import deathrow
 from starcluster import exception
 from starcluster.cluster import Cluster
-from starcluster.cluster import VPCCluster
 from starcluster.utils import AttributeDict
 
 from starcluster.logger import log
