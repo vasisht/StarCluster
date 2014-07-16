@@ -1,3 +1,20 @@
+# Copyright 2009-2013 Justin Riley
+#
+# This file is part of StarCluster.
+#
+# StarCluster is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# StarCluster is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+
 from starcluster import exception
 from starcluster.logger import log
 
@@ -33,6 +50,11 @@ class CmdTerminate(ClusterCompleter):
         parser.add_option("-f", "--force", dest="force", action="store_true",
                           default=False,  help="Terminate cluster regardless "
                           "of errors if possible ")
+        parser.add_option("-P", "--dns-prefix", action="store_true",
+                          help=("Let starcluster know that the master's dns"
+                                " name starts with the tag name.  ie: "
+                                " mycluster-master.  This is only necessary if"
+                                " you prefix nodes with the cluster tag"))
 
     def _terminate_cluster(self, cl):
         if not self.opts.confirm:
@@ -59,25 +81,24 @@ class CmdTerminate(ClusterCompleter):
         cl.terminate_cluster(force=True)
 
     def terminate(self, cluster_name, force=False):
+        if force:
+            log.warn("Ignoring cluster settings due to --force option")
         try:
-            cl = self.cm.get_cluster(cluster_name)
-            self._terminate_cluster(cl)
-        except exception.ClusterDoesNotExist:
-            raise
-        except Exception, e:
-            errmsg = "Failed to load cluster settings!"
-            log.debug(errmsg,  exc_info=True)
+            cl = self.cm.get_cluster(cluster_name, load_receipt=not force,
+                                     require_keys=not force)
+            if self.opts.dns_prefix:
+                cl.dns_prefix = cluster_name
             if force:
-                log.warn(errmsg)
-                log.warn("Ignoring cluster settings due to --force option")
-                cl = self.cm.get_cluster(cluster_name, load_receipt=False,
-                                         require_keys=False)
                 self._terminate_manually(cl)
             else:
-                log.error(errmsg)
-                if not isinstance(e, exception.IncompatibleCluster):
-                    log.error("Use -f to forcefully terminate the cluster")
-                raise
+                self._terminate_cluster(cl)
+        except exception.ClusterDoesNotExist:
+            raise
+        except Exception:
+            log.error("Failed to terminate cluster!", exc_info=True)
+            if not force:
+                log.error("Use -f to forcefully terminate the cluster")
+            raise
 
     def execute(self, args):
         if not args:

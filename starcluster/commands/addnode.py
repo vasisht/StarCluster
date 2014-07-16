@@ -1,3 +1,20 @@
+# Copyright 2009-2013 Justin Riley
+#
+# This file is part of StarCluster.
+#
+# StarCluster is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# StarCluster is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+
 from starcluster import static
 from completers import ClusterCompleter
 
@@ -53,10 +70,20 @@ class CmdAddNode(ClusterCompleter):
     tag = None
 
     def addopts(self, parser):
+        templates = []
+        if self.cfg:
+            templates = self.cfg.clusters.keys()
+        parser.add_option(
+            "-c", "--cluster-template", action="store",
+            dest="cluster_template", choices=templates, default=None,
+            help="cluster template to use from the config file")
         parser.add_option(
             "-a", "--alias", dest="alias", action="append", type="string",
             default=[], help="alias to give to the new node "
             "(e.g. node007, mynode, etc.)")
+        parser.add_option("-P", "--dns-prefix", action='store_true',
+                          help=("Prefix dns names of all added nodes"
+                                " with the cluster tag"))
         parser.add_option(
             "-n", "--num-nodes", dest="num_nodes", action="store", type="int",
             default=1, help="number of new nodes to launch")
@@ -67,7 +94,7 @@ class CmdAddNode(ClusterCompleter):
         parser.add_option(
             "-I", "--instance-type", dest="instance_type",
             action="store", type="choice", default=None,
-            choices=static.INSTANCE_TYPES.keys(),
+            choices=sorted(static.INSTANCE_TYPES.keys()),
             help="The instance type to use when launching volume "
             "host instance")
         parser.add_option(
@@ -98,8 +125,9 @@ class CmdAddNode(ClusterCompleter):
         aliases = []
         for alias in self.opts.alias:
             aliases.extend(alias.split(','))
-        if 'master' in aliases:
-            self.parser.error("'master' is a reserved alias")
+        if ('master' in aliases) or ('%s-master' % tag in aliases):
+            self.parser.error(
+                "'master' and '%s-master' are reserved aliases" % tag)
         num_nodes = self.opts.num_nodes
         if num_nodes == 1 and aliases:
             num_nodes = len(aliases)
@@ -117,4 +145,6 @@ class CmdAddNode(ClusterCompleter):
                           image_id=self.opts.image_id,
                           instance_type=self.opts.instance_type,
                           zone=self.opts.zone, spot_bid=self.opts.spot_bid,
-                          no_create=self.opts.no_create)
+                          no_create=self.opts.no_create,
+                          dns_prefix=self.opts.dns_prefix,
+                          template=self.opts.cluster_template)

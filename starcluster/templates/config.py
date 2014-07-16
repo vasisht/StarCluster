@@ -1,3 +1,20 @@
+# Copyright 2009-2013 Justin Riley
+#
+# This file is part of StarCluster.
+#
+# StarCluster is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# StarCluster is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+
 from starcluster import static
 
 config_template = """\
@@ -83,6 +100,11 @@ CLUSTER_USER = sgeadmin
 # optionally specify shell (defaults to bash)
 # (options: %(shells)s)
 CLUSTER_SHELL = bash
+# Uncomment to prepent the cluster tag to the dns name of all nodes created
+# using this cluster config.  ie: mycluster-master and mycluster-node001
+# If you choose to enable this option, it's recommended that you enable it in
+# the DEFAULT_TEMPLATE so all nodes will automatically have the prefix
+# DNS_PREFIX = True
 # AMI to use for cluster nodes. These AMIs are for the us-east-1 region.
 # Use the 'listpublic' command to list StarCluster AMIs in other regions
 # The base i386 StarCluster AMI is %(x86_ami)s
@@ -124,6 +146,10 @@ NODE_INSTANCE_TYPE = m1.small
 # this template. The following example will place a $0.50 bid for each spot
 # request.
 #SPOT_BID = 0.50
+# Uncomment to specify one or more userdata scripts to use when launching
+# cluster instances. Supports cloudinit. All scripts combined must be less than
+# 16KB
+#USERDATA_SCRIPTS = /path/to/script1, /path/to/script2
 
 ###########################################
 ## Defining Additional Cluster Templates ##
@@ -189,32 +215,32 @@ NODE_INSTANCE_TYPE = m1.small
 ## Configuring Security Group Permissions ##
 ############################################
 # Sections starting with "permission" define security group rules to
-# automatically apply to newly created clusters. PROTOCOL in the following
+# automatically apply to newly created clusters. IP_PROTOCOL in the following
 # examples can be can be: tcp, udp, or icmp. CIDR_IP defaults to 0.0.0.0/0 or
 # "open to the # world"
 
 # open port 80 on the cluster to the world
 # [permission http]
-# PROTOCOL = tcp
+# IP_PROTOCOL = tcp
 # FROM_PORT = 80
 # TO_PORT = 80
 
 # open https on the cluster to the world
 # [permission https]
-# PROTOCOL = tcp
+# IP_PROTOCOL = tcp
 # FROM_PORT = 443
 # TO_PORT = 443
 
 # open port 80 on the cluster to an ip range using CIDR_IP
 # [permission http]
-# PROTOCOL = tcp
+# IP_PROTOCOL = tcp
 # FROM_PORT = 80
 # TO_PORT = 80
 # CIDR_IP = 18.0.0.0/8
 
 # restrict ssh access to a single ip address (<your_ip>)
 # [permission ssh]
-# PROTOCOL = tcp
+# IP_PROTOCOL = tcp
 # FROM_PORT = 22
 # TO_PORT = 22
 # CIDR_IP = <your_ip>/32

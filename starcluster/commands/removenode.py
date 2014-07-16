@@ -1,3 +1,20 @@
+# Copyright 2009-2013 Justin Riley
+#
+# This file is part of StarCluster.
+#
+# StarCluster is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# StarCluster is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with StarCluster. If not, see <http://www.gnu.org/licenses/>.
+
 from completers import ClusterCompleter
 
 
@@ -32,6 +49,16 @@ class CmdRemoveNode(ClusterCompleter):
     tag = None
 
     def addopts(self, parser):
+        templates = []
+        if self.cfg:
+            templates = self.cfg.clusters.keys()
+        parser.add_option(
+            "-c", "--cluster-template", action="store",
+            dest="cluster_template", choices=templates, default=None,
+            help="cluster template to use from the config file")
+        parser.add_option("-f", "--force", dest="force", action="store_true",
+                          default=False,  help="Terminate node regardless "
+                          "of errors if possible ")
         parser.add_option("-k", "--keep-instance", dest="terminate",
                           action="store_false", default=True,
                           help="do not terminate instances "
@@ -43,4 +70,6 @@ class CmdRemoveNode(ClusterCompleter):
         tag = self.tag = args[0]
         aliases = args[1:]
         for alias in aliases:
-            self.cm.remove_node(tag, alias, terminate=self.opts.terminate)
+            self.cm.remove_node(tag, alias, terminate=self.opts.terminate,
+                                template=self.opts.cluster_template,
+                                force=self.opts.force)
