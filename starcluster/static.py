@@ -55,7 +55,7 @@ def create_sc_config_dirs():
     __makedirs(STARCLUSTER_LOG_DIR)
 
 
-VERSION = "0.9999-vpc"
+VERSION = "0.9999"
 PID = os.getpid()
 TMP_DIR = tempfile.gettempdir()
 if os.path.exists("/tmp"):
@@ -85,9 +85,9 @@ BASE_AMI_32 = "ami-7c5c3915"
 BASE_AMI_64 = "ami-765b3e1f"
 BASE_AMI_HVM = "ami-52a0c53b"
 
-SECURITY_GROUP_PREFIX = "sc"
-SECURITY_GROUP_TEMPLATE = '-'.join([SECURITY_GROUP_PREFIX, "%s"])
-#SECURITY_GROUP_TEMPLATE = SECURITY_GROUP_PREFIX + "%s"
+SECURITY_GROUP_PREFIX = "sc-"
+#SECURITY_GROUP_TEMPLATE = '-'.join([SECURITY_GROUP_PREFIX, "%s"])
+SECURITY_GROUP_TEMPLATE = SECURITY_GROUP_PREFIX + "%s"
 VOLUME_GROUP_NAME = "volumecreator"
 VOLUME_GROUP = SECURITY_GROUP_PREFIX + VOLUME_GROUP_NAME
 
