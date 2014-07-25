@@ -688,7 +688,7 @@ class Node(object):
 
     def start_nfs_server(self):
         log.info("Starting NFS server on %s" % self.alias)
-        self.ssh.execute('/etc/init.d/portmap start')
+        self.ssh.execute('service rpcbind restart')
         self.ssh.execute('mount -t rpc_pipefs sunrpc /var/lib/nfs/rpc_pipefs/',
                          ignore_exit_status=True)
         #self.ssh.execute('/etc/init.d/nfs start')
@@ -702,7 +702,7 @@ class Node(object):
         server_node - remote server node that is sharing the remote_paths
         remote_paths - list of remote paths to mount from server_node
         """
-        self.ssh.execute('/etc/init.d/portmap start')
+        self.ssh.execute('service rpcbind restart')
         # TODO: move this fix for xterm somewhere else
         self.ssh.execute('mount -t devpts none /dev/pts',
                          ignore_exit_status=True)
