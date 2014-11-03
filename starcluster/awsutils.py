@@ -450,6 +450,10 @@ class EasyEC2(EasyAWS):
                 log.debug("Forcing delete_on_termination for AMI: %s" % img.id)
                 root = img.block_device_mapping[img.root_device_name]
                 root.delete_on_termination = True
+                # AWS API doesn't support any value for this flag for the root
+                # device of a new instance (see: boto#2587)
+                if hasattr(root, 'encrypted'):
+                    root.encrypted = None
                 bdmap[img.root_device_name] = root
             block_device_map = bdmap
 
