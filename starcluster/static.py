@@ -157,6 +157,9 @@ HI_IO_TYPES = ['hi1.4xlarge']
 
 HI_STORAGE_TYPES = ['hs1.8xlarge']
 
+M3_COMPUTE_TYPES = ['c3.large', 'c3.xlarge', 'c3.2xlarge', 'c3.4xlarge',
+                    'c3.8xlarge']
+
 CLUSTER_TYPES = CLUSTER_COMPUTE_TYPES + CLUSTER_GPU_TYPES + CLUSTER_HIMEM_TYPES
 
 M4_COMPUTE_TYPES = ['c4.large', 'c4.xlarge', 'c4.2xlarge', 'c4.4xlarge',
