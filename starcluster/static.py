@@ -170,7 +170,8 @@ M4_COMPUTE_TYPES = ['c4.large', 'c4.xlarge', 'c4.2xlarge', 'c4.4xlarge',
 I2_STORAGE_TYPES = ['i2.xlarge', 'i2.2xlarge', 'i2.4xlarge', 'i2.8xlarge']
 
 HVM_ONLY_TYPES = (CLUSTER_COMPUTE_TYPES + CLUSTER_GPU_TYPES +
-                  CLUSTER_HIMEM_TYPES + I2_STORAGE_TYPES)
+                  CLUSTER_HIMEM_TYPES + I2_STORAGE_TYPES + HIMEM_TYPES +
+                  T2_INSTANCE_TYPES)
 
 HVM_TYPES = (HVM_ONLY_TYPES + HI_IO_TYPES + HI_STORAGE_TYPES + SEC_GEN_TYPES +
              M3_COMPUTE_TYPES + M4_COMPUTE_TYPES)
