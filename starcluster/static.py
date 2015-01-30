@@ -143,7 +143,9 @@ INSTANCE_TYPES = {
     'i2.8xlarge': ['x86_64'],
 }
 
-MICRO_INSTANCE_TYPES = ['t1.micro']
+T1_INSTANCE_TYPES = ['t1.micro']
+
+T2_INSTANCE_TYPES = ['t2.micro', 't2.small', 't2.medium']
 
 SEC_GEN_TYPES = ['m3.xlarge', 'm3.2xlarge']
 
@@ -172,6 +174,8 @@ HVM_ONLY_TYPES = (CLUSTER_COMPUTE_TYPES + CLUSTER_GPU_TYPES +
 
 HVM_TYPES = (HVM_ONLY_TYPES + HI_IO_TYPES + HI_STORAGE_TYPES + SEC_GEN_TYPES +
              M3_COMPUTE_TYPES + M4_COMPUTE_TYPES)
+
+EBS_ONLY_TYPES = T1_INSTANCE_TYPES + T2_INSTANCE_TYPES
 
 # Always make sure these match instances listed here:
 # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
