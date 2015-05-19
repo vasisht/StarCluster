@@ -961,7 +961,7 @@ class Cluster(object):
                                      placement_group=placement_group,
                                      spot_bid=spot_bid)
             if spot_bid or self.spot_bid:
-                self.ec2.wait_for_propagation(spot_requests=resp)
+                self.ec2.wait_for_propagation(spot_requests=resp,max_retries=60)
             else:
                 self.ec2.wait_for_propagation(instances=resp[0].instances)
         self.wait_for_cluster(msg="Waiting for node(s) to come up...")
