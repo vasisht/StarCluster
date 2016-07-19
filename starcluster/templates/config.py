@@ -115,7 +115,7 @@ NODE_IMAGE_ID = %(x86_64_ami)s
 # (options: %(instance_types)s)
 NODE_INSTANCE_TYPE = m1.small
 # Launch cluster in a VPC subnet (OPTIONAL)
-#SUBNET_ID=subnet-99999999
+#SUBNET_IDS=subnet-99999999
 # Uncomment to assign public IPs to cluster nodes (VPC-ONLY) (OPTIONAL)
 # WARNING: Using public IPs with a VPC requires:
 # 1. An internet gateway attached to the VPC

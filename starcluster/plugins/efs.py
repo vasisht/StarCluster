@@ -26,7 +26,7 @@ class EFSPlugin(clustersetup.DefaultClusterSetup):
     Example config:
 
     [plugin efs]
-    SETUP_CLASS = efs.EFSPlugin
+    SETUP_CLASS = starcluster.plugins.efs.EFSPlugin
     mount_point = /mnt/myefs
     dns_name = us-west-2a.fs-1234abcd.efs.us-west-2.amazonaws.com
 
@@ -146,8 +146,8 @@ class EFSPlugin(clustersetup.DefaultClusterSetup):
         return mts
 
     def _install_efs_on_node(self, node):
-        node.ssh.switch_user('root')
-        node.ssh.makedirs(self.mount_point, mode=0755)
+        # node.ssh.switch_user('root')
+        # node.ssh.makedirs(self.mount_point, mode=0755)
 
         parts = self.dns_name.split('.')
         get_info_url = 'http://169.254.169.254/latest/meta-data/'
