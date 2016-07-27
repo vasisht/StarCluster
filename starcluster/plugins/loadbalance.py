@@ -18,6 +18,7 @@
 from starcluster import clustersetup
 from starcluster.logger import log
 from starcluster import static
+from starcluster import config
 import tempfile
 
 
@@ -65,6 +66,12 @@ class LoadBalance(clustersetup.DefaultClusterSetup):
             master.ssh.mkdir(config_dir)
         log.info('Transferring StarCluster config')
         master.ssh.put(self.config_file, remote_config)
+        cfg = config.StarClusterConfig().load()
+        aws_key = cfg.keys.keys()[0]
+        key_location = cfg.get_key(aws_key).key_location
+        remote_key_loc = '/root/.ssh/' + key_location.split('/')[-1]
+        master.ssh.put(key_location, remote_key_loc)
+        master.ssh.chmod(remote_key_loc, 0600)
         log.info('Running loadbalancer on the master')
         self._run_load_balancer(master)
 
