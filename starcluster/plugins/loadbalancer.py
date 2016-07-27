@@ -21,13 +21,13 @@ from starcluster import static
 import tempfile
 
 
-class LoadBalance(clustersetup.DefaultClusterSetup):
+class LoadBalancer(clustersetup.DefaultClusterSetup):
     """Run loadbalancer on master
 
     Example config:
 
-    [plugin loadbalance]
-    SETUP_CLASS = starcluster.plugins.loadbalance.LoadBalance
+    [plugin loadbalancer]
+    SETUP_CLASS = starcluster.plugins.loadbalancer.LoadBalance
     min_nodes = 2
     max_nodes = 10
     kill_cluster = True
