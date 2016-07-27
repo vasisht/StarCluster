@@ -27,7 +27,7 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
     Example config:
 
     [plugin loadbalancer]
-    SETUP_CLASS = starcluster.plugins.loadbalancer.LoadBalance
+    SETUP_CLASS = starcluster.plugins.loadbalancer.LoadBalancer
     min_nodes = 2
     max_nodes = 10
     kill_cluster = True
