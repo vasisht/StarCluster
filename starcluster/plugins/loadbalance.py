@@ -76,7 +76,7 @@ class LoadBalance(clustersetup.DefaultClusterSetup):
             clone += ' -b %s ' % branch
         clone += dirpath
         node.ssh.execute(clone)
-        install = 'cd StarCluster && python setup.py install'
+        install = 'cd %s && python setup.py install' % dirpath
         node.ssh.execute(install)
         node.ssh.execute('rm -rf %s' % dirpath)
 
