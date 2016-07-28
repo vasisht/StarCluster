@@ -50,7 +50,7 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
                  config_file=None):
         self.min_nodes = min_nodes
         self.max_nodes = max_nodes
-        self.kill_cluster = kill_cluster
+        self.kill_cluster = str(kill_cluster).lower() == "true"
         self.starcluster = starcluster
         self.branch = branch
         self.options = options
@@ -105,7 +105,7 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
         if not self._check_screen_session(node):
             node.ssh.execute('screen -dmS %s' % screen)
         loadbalancer_cmd = ('/usr/local/bin/starcluster loadbalance '
-                            ' --max_nodes %s --min_nodes %s ')
+                            ' --min_nodes %s --max_nodes %s ')
         if self.kill_cluster:
             loadbalancer_cmd += " --kill-cluster "
         if self.options is not None:
