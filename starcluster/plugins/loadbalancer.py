@@ -22,7 +22,7 @@ from starcluster import config
 import tempfile
 
 
-class LoadBalance(clustersetup.DefaultClusterSetup):
+class LoadBalancer(clustersetup.DefaultClusterSetup):
     """Run loadbalancer on master
 
     Example config:
