@@ -37,9 +37,15 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
     options = -a 2 --spot-bid 1.0
     config_file = /home/vasisht/.starcluster/config
 
+    max_nodes and min_nodes are required parameters.
+    Additional options to loadbalance can be passed
+    as a string to the options parameter. StarCluster
+    needs to be installed on the master instance if
+    the starcluster parameter is not specified.
+
     """
 
-    def __init__(self, min_nodes=2, max_nodes=10, kill_cluster=True,
+    def __init__(self, min_nodes=None, max_nodes=None, kill_cluster=None,
                  starcluster=None, branch=None, options=None,
                  config_file=None):
         self.min_nodes = min_nodes
@@ -51,8 +57,12 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
         self.config_file = config_file
 
     def run(self, nodes, master, user, user_shell, volumes):
+        if self.min_nodes is None:
+            log.fatal("Missing required min_nodes argument")
+        if self.max_nodes is None:
+            log.fatal("Missing required max_nodes argument")
         if self.starcluster is None:
-            log.warn("Missing starcluster parameter")
+            log.warn("Missing starcluster argument")
         else:
             log.info('Installing StarCluster on master')
             if self.branch is None:
@@ -78,7 +88,6 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
         self._run_load_balancer(master)
 
     def _install_starcluster(self, node, starcluster, branch=None):
-        node.apt_install('libffi-dev')
         dirpath = tempfile.mkdtemp()
         clone = 'git clone %s ' % starcluster
         if branch is not None:
