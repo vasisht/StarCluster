@@ -87,6 +87,13 @@ class LoadBalancer(clustersetup.DefaultClusterSetup):
         log.info('Running loadbalancer on the master')
         self._run_load_balancer(master)
 
+    def on_add_node(self, node, nodes, master, user, user_shell, volumes):
+        log.info("Loadbalancer only runs on master")
+
+    def on_remove_node(self, node, nodes, master, user, user_shell, volumes):
+        log.info("No action required on node removal")
+
+
     def _install_starcluster(self, node, starcluster, branch=None):
         dirpath = tempfile.mkdtemp()
         clone = 'git clone %s ' % starcluster
