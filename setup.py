@@ -70,8 +70,7 @@ try:
                                    "decorator>=3.4.0", "iptools>=0.6.1",
                                    "optcomplete>=1.2-devel",
                                    "pycrypto>=2.5", "scp>=0.7.3",
-                                   "iso8601>=0.1.8", "boto3==1.3.1",
-                                   "cryptography==1.2.1"],
+                                   "iso8601>=0.1.8", "boto3==1.3.1"],
                  include_package_data=True,
                  entry_points=dict(console_scripts=console_scripts),
                  zip_safe=False)
