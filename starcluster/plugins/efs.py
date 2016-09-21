@@ -29,14 +29,16 @@ class EFSPlugin(clustersetup.DefaultClusterSetup):
     SETUP_CLASS = starcluster.plugins.efs.EFSPlugin
     mount_point = /mnt/myefs
     fs_id = fs-1234abcd
+    mount_options = rsize=1048576, wsize=1048576, hard, timeo=600, retrans=2
 
 
     """
 
     def __init__(self, mount_point=None, fs_id=None,
-                 **kwargs):
+                 mount_options=None, **kwargs):
         self.mount_point = mount_point
         self.fs_id = fs_id
+        self.mount_options = mount_options
         super(EFSPlugin, self).__init__(**kwargs)
 
     def run(self, nodes, master, user, user_shell, volumes):
@@ -144,8 +146,13 @@ class EFSPlugin(clustersetup.DefaultClusterSetup):
         mount_info = node.ssh.execute('grep %s /proc/mounts' %
                                       self.mount_point, raise_on_failure=False,
                                       ignore_exit_status=True)
-        cmd = 'mount -t nfs4 -ominorversion=1 %s:/ %s' % (efs_dns,
-                                                          self.mount_point)
+        if self.mount_options is None:
+            mount_options = ('minorversion=1,rsize=1048576,wsize=1048576'
+                             ',hard,timeo=600,retrans=2')
+        else:
+            mount_options = self.mount_options
+        cmd = 'mount -t nfs4 -o %s %s:/ %s' % (mount_options, efs_dns,
+                                               self.mount_point)
         if mount_info:
             log.warn('%s is already a mount point' % self.mount_point)
             log.info(mount_info[0])
