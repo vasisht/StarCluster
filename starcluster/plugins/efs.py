@@ -29,7 +29,7 @@ class EFSPlugin(clustersetup.DefaultClusterSetup):
     SETUP_CLASS = starcluster.plugins.efs.EFSPlugin
     mount_point = /mnt/myefs
     fs_id = fs-1234abcd
-    mount_options = rsize=1048576, wsize=1048576, hard, timeo=600, retrans=2
+    mount_options = rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
 
 
     """
