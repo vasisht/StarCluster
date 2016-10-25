@@ -254,6 +254,7 @@ class CmdStart(ClusterCompleter):
             if interval is not None:
                 scluster.refresh_interval = interval
         if self.opts.spot_bid is not None and not self.opts.no_create:
+            scluster.node_instance_array[0]['spot_bid'] = self.opts.spot_bid
             msg = user_msgs.spotmsg % {'size': scluster.cluster_size,
                                        'tag': tag}
             if not validate_only and not create_only:
