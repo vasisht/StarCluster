@@ -256,9 +256,13 @@ class SGEPlugin(clustersetup.DefaultClusterSetup):
         self._master = master
         self._nodes = nodes
 
-        qhosts = master.ssh.execute("qhost", source_profile=True)
-        qhosts = qhosts[3:]
-        qhosts = [line.split(' ')[0] for line in qhosts]
+        qhost_xml = master.ssh.execute("qhost -xml", source_profile=True)
+        qhost_et = ET.fromstringlist(qhost_xml)
+        qhosts = []
+        for host in qhost_et:
+            h_name = host.attrib['name']
+            if h_name != 'global':
+                qhosts.append(h_name)
 
         if len(qhosts) == 0:
             log.info("Nothing to clean")
