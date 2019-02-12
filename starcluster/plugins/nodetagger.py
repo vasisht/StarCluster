@@ -46,6 +46,7 @@ class NodeTagger(clustersetup.DefaultClusterSetup):
                 node.add_tag(tag, tags[tag])
 
     def on_add_node(self, node, nodes, master, user, user_shell, volumes):
+        tags = self.tags
         for tag in tags:
             log.info('Applying tag %s:%s to %s' % (tag, tags[tag], node.alias))
             node.add_tag(tag, tags[tag])
