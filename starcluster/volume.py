@@ -30,7 +30,7 @@ class VolumeCreator(cluster.Cluster):
     """
     Handles creating, partitioning, and formatting a new EBS volume.
     By default this class will format the entire drive (without partitioning)
-    using the ext3 filesystem.
+    using the ext4 filesystem.
 
     host_instance - EC2 instance to use when formatting volume. must exist in
     the same zone as the new volume. if not specified this class will look for
@@ -45,7 +45,7 @@ class VolumeCreator(cluster.Cluster):
                  key_location=None, host_instance=None, device='/dev/sdz',
                  image_id=static.BASE_AMI_32, instance_type="t1.micro",
                  shutdown_instance=False, detach_vol=False,
-                 mkfs_cmd='mkfs.ext3 -F', resizefs_cmd='resize2fs', **kwargs):
+                 mkfs_cmd='mkfs.ext4 -F', resizefs_cmd='resize2fs', **kwargs):
         self._host_instance = host_instance
         self._instance = None
         self._volume = None

@@ -63,9 +63,9 @@ class CmdCreateVolume(CmdBase):
             help="Shutdown host instance after creating new volume")
         parser.add_option(
             "-m", "--mkfs-cmd", dest="mkfs_cmd",
-            action="store", type="string", default="mkfs.ext3",
+            action="store", type="string", default="mkfs.ext4",
             help="Specify alternate mkfs command to use when "
-            "formatting volume (default: mkfs.ext3)")
+            "formatting volume (default: mkfs.ext4)")
         parser.add_option(
             "-i", "--image-id", dest="image_id",
             action="store", type="string", default=None,
